@@ -33,14 +33,26 @@ module Jekyll
       true
     end
 
+    def term_has_ansi?
+      ENV['TERM'] != 'dumb'
+    end
+
+    def colorize(msg, color)
+      if term_has_ansi?
+        msg.send(color)
+      else
+        msg
+      end
+    end
+
     # Log a +WARN+ message
     def warn(progname = nil, &block)
-      add(WARN, nil, progname.yellow, &block)
+      add(WARN, nil, colorize(progname, :yellow), &block)
     end
 
     # Log an +ERROR+ message
     def error(progname = nil, &block)
-      add(ERROR, nil, progname.red, &block)
+      add(ERROR, nil, colorize(progname, :red), &block)
     end
 
     def close
